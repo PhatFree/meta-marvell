@@ -5,7 +5,6 @@ HOMEPAGE = "https://github.com/MarvellEmbeddedProcessors/mvpp2x-marvell"
 
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://mv_pp2x_main.c;beginline=1;endline=17;md5=118e064612a197e129488f096ad65ae5"
-PROVIDES = "mvpp2x-sysfs"
 
 SRCBRANCH = "mvpp2x-armada-17.10"
 SRCREV = "3cb337f10f4d3a97ead651336f7e6aefd0a7523c"
@@ -32,12 +31,14 @@ LDFLAGS := "${@'${LDFLAGS}'.replace('-Wl,--as-needed', '')}"
 LDFLAGS := "${@'${LDFLAGS}'.replace('-Wl,--hash-style=gnu', '')}"
 
 do_configure () {
-    ln -s Makefile_sysfs sysfs/Makefile
+    cd ${S}/sysfs
+    cp -rf Makefile_sysfs Makefile
 }
 
 do_compile () {
-    oe_runmake -C sysfs clean
-    oe_runmake -C sysfs
+    cd ${S}/sysfs
+    oe_runmake clean
+    oe_runmake KERNEL_SOURCES=1
 }
 
 do_install () {
